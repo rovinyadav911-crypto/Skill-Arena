@@ -1,0 +1,224 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered player account with wallet balance, UPI ID, DPDP Act 2023 consent, and strong account recovery metadata",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "maxLength": 100 },
+        "password": { "type": "string", "maxLength": 100 },
+        "wallet_balance": { "type": "number" },
+        "upi_id": { "type": "string", "maxLength": 100 },
+        "is_blocked": { "type": "boolean" },
+        "dpdp_consent_accepted": { "type": "boolean" },
+        "dpdp_consent_at": { "type": "string", "maxLength": 40 },
+        "age_verified_18": { "type": "boolean" },
+        "nominee_name": { "type": "string", "maxLength": 80 },
+        "nominee_contact": { "type": "string", "maxLength": 120 },
+        "recovery_key": { "type": "string", "maxLength": 32 },
+        "security_question": { "type": "string", "maxLength": 140 },
+        "security_answer": { "type": "string", "maxLength": 100 },
+        "last_password_reset_at": { "type": "string", "maxLength": 40 },
+        "created_at": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "username", "email", "password", "wallet_balance", "upi_id", "is_blocked", "created_at"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Administrator credentials for managing tournaments and financial requests",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "password": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "username", "password"]
+    },
+    "Tournament": {
+      "title": "Tournament",
+      "description": "Esports tournament event with entry fee, 1st/2nd/3rd prize pool breakdown, room details, and commission",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 120 },
+        "game_name": { "type": "string", "maxLength": 80 },
+        "entry_fee": { "type": "number" },
+        "prize_pool": { "type": "number" },
+        "prize_1st": { "type": "number" },
+        "prize_2nd": { "type": "number" },
+        "prize_3rd": { "type": "number" },
+        "match_time": { "type": "string", "maxLength": 60 },
+        "commission_percentage": { "type": "number" },
+        "room_id": { "type": "string", "maxLength": 80 },
+        "room_password": { "type": "string", "maxLength": 80 },
+        "status": { "type": "string", "enum": ["Upcoming", "Live", "Completed", "Cancelled"], "maxLength": 20 },
+        "winner_id": { "type": "string", "maxLength": 128 },
+        "winner_username": { "type": "string", "maxLength": 50 },
+        "winner_2nd_id": { "type": "string", "maxLength": 128 },
+        "winner_2nd_username": { "type": "string", "maxLength": 50 },
+        "winner_3rd_id": { "type": "string", "maxLength": 128 },
+        "winner_3rd_username": { "type": "string", "maxLength": 50 },
+        "rules": { "type": "string", "maxLength": 2000 },
+        "team_mode": { "type": "string", "enum": ["Solo", "Duo", "Squad"], "maxLength": 20 },
+        "max_slots": { "type": "number" },
+        "created_at": { "type": "string", "maxLength": 40 }
+      },
+      "required": [
+        "id",
+        "title",
+        "game_name",
+        "entry_fee",
+        "prize_pool",
+        "match_time",
+        "commission_percentage",
+        "room_id",
+        "room_password",
+        "status",
+        "winner_id",
+        "winner_username",
+        "created_at"
+      ]
+    },
+    "Participant": {
+      "title": "Participant",
+      "description": "Record of a user joining a specific tournament with solo, duo, or squad roster slots",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "tournament_id": { "type": "string", "maxLength": 128 },
+        "team_mode": { "type": "string", "enum": ["Solo", "Duo", "Squad"], "maxLength": 20 },
+        "slot_number": { "type": "number" },
+        "team_name": { "type": "string", "maxLength": 60 },
+        "player_1_ign": { "type": "string", "maxLength": 50 },
+        "player_2_ign": { "type": "string", "maxLength": 50 },
+        "player_3_ign": { "type": "string", "maxLength": 50 },
+        "player_4_ign": { "type": "string", "maxLength": 50 },
+        "created_at": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "user_id", "username", "tournament_id", "created_at"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Wallet ledger transaction record (credit or debit)",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "amount": { "type": "number" },
+        "type": { "type": "string", "enum": ["credit", "debit"], "maxLength": 10 },
+        "description": { "type": "string", "maxLength": 200 },
+        "created_at": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "user_id", "username", "amount", "type", "description", "created_at"]
+    },
+    "Deposit": {
+      "title": "Deposit",
+      "description": "Manual UPI deposit request submitted by a user with attached payment screenshot",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "amount": { "type": "number" },
+        "transaction_id": { "type": "string", "maxLength": 80 },
+        "screenshot_url": { "type": "string", "maxLength": 500000 },
+        "status": { "type": "string", "enum": ["Pending", "Completed", "Rejected"], "maxLength": 20 },
+        "admin_comment": { "type": "string", "maxLength": 200 },
+        "created_at": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "user_id", "username", "amount", "transaction_id", "status", "created_at"]
+    },
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "Manual UPI withdrawal request submitted by a user",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "username": { "type": "string", "maxLength": 50 },
+        "amount": { "type": "number" },
+        "upi_id": { "type": "string", "maxLength": 100 },
+        "status": { "type": "string", "enum": ["Pending", "Completed", "Rejected"], "maxLength": 20 },
+        "admin_comment": { "type": "string", "maxLength": 200 },
+        "created_at": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "user_id", "username", "amount", "upi_id", "status", "created_at"]
+    },
+    "Notification": {
+      "title": "Notification",
+      "description": "In-app alert sent to a user when a tournament starts, is postponed, finalized, cancelled, or when a payment is reviewed",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "user_id": { "type": "string", "maxLength": 128 },
+        "tournament_id": { "type": "string", "maxLength": 128 },
+        "type": {
+          "type": "string",
+          "enum": ["starting_soon", "results_finalized", "postponed", "cancelled", "payment_update"],
+          "maxLength": 30
+        },
+        "title": { "type": "string", "maxLength": 120 },
+        "message": { "type": "string", "maxLength": 500 },
+        "is_read": { "type": "boolean" },
+        "created_at": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "user_id", "tournament_id", "type", "title", "message", "is_read", "created_at"]
+    },
+    "Setting": {
+      "title": "Setting",
+      "description": "Global platform configuration including Admin UPI ID and QR code",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "admin_upi_id": { "type": "string", "maxLength": 100 },
+        "qr_code_url": { "type": "string", "maxLength": 150000 },
+        "schema_updated": { "type": "boolean" },
+        "installed": { "type": "boolean" }
+      },
+      "required": ["id", "admin_upi_id", "qr_code_url", "schema_updated", "installed"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User accounts and wallet balances"
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Admin accounts"
+    },
+    "/tournaments/{tournamentId}": {
+      "schema": "Tournament",
+      "description": "Esports tournaments"
+    },
+    "/participants/{participantId}": {
+      "schema": "Participant",
+      "description": "Tournament participant joins"
+    },
+    "/transactions/{transactionId}": {
+      "schema": "Transaction",
+      "description": "Wallet credit/debit transactions"
+    },
+    "/deposits/{depositId}": {
+      "schema": "Deposit",
+      "description": "Manual UPI deposit requests"
+    },
+    "/withdrawals/{withdrawalId}": {
+      "schema": "Withdrawal",
+      "description": "Manual UPI withdrawal requests"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "Notification",
+      "description": "In-app user notifications for tournaments and payments"
+    },
+    "/settings/{settingId}": {
+      "schema": "Setting",
+      "description": "Global platform settings and UPI QR code"
+    }
+  }
+}

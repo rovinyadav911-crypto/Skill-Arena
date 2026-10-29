@@ -1,0 +1,221 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Background & Shield Gradients -->
+    <radialGradient id="saBgGlow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#F59E0B" stop-opacity="0.28"/>
+      <stop offset="50%" stop-color="#D97706" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#0B0F17" stop-opacity="0"/>
+    </radialGradient>
+    
+    <linearGradient id="saShieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1E293B"/>
+      <stop offset="50%" stop-color="#0F172A"/>
+      <stop offset="100%" stop-color="#05070B"/>
+    </linearGradient>
+
+    <!-- Gold Metallic Gradients -->
+    <linearGradient id="saGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFBEB"/>
+      <stop offset="25%" stop-color="#FDE047"/>
+      <stop offset="60%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+
+    <linearGradient id="saGoldLight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#92400E"/>
+    </linearGradient>
+
+    <!-- Visor Glowing Gradient -->
+    <linearGradient id="saVisor" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="30%" stop-color="#FEF08A"/>
+      <stop offset="70%" stop-color="#FFFBEB"/>
+      <stop offset="100%" stop-color="#F59E0B"/>
+    </linearGradient>
+
+    <!-- Armor Dark Slate Gradients -->
+    <linearGradient id="saArmorBase" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#334155"/>
+      <stop offset="50%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#0F172A"/>
+    </linearGradient>
+
+    <linearGradient id="saArmorHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748B"/>
+      <stop offset="100%" stop-color="#1E293B"/>
+    </linearGradient>
+
+    <!-- Drop Shadows -->
+    <filter id="saGlowFilter" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+
+    <filter id="saSharpShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000000" flood-opacity="0.8"/>
+    </filter>
+  </defs>
+
+  <!-- Dark Background Canvas with Rounded Corners -->
+  <rect width="512" height="512" rx="108" fill="#0B0F17"/>
+  <rect width="512" height="512" rx="108" fill="none" stroke="#1E293B" stroke-width="2"/>
+
+  <!-- Radial Arena Glow Backdrop -->
+  <circle cx="256" cy="240" r="210" fill="url(#saBgGlow)"/>
+
+  <!-- Targeting / Arena Crosshair Ring (Symbol of Precision & Challenge) -->
+  <circle cx="256" cy="235" r="150" fill="none" stroke="#F59E0B" stroke-opacity="0.18" stroke-width="2" stroke-dasharray="12 8"/>
+  <circle cx="256" cy="235" r="172" fill="none" stroke="#F59E0B" stroke-opacity="0.10" stroke-width="1.5"/>
+  <line x1="256" y1="52" x2="256" y2="76" stroke="#F59E0B" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/>
+  <line x1="256" y1="400" x2="256" y2="424" stroke="#F59E0B" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/>
+  <line x1="72" y1="235" x2="96" y2="235" stroke="#F59E0B" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/>
+  <line x1="416" y1="235" x2="440" y2="235" stroke="#F59E0B" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- ==================== GROWTH / WINGS ELEMENTS ==================== -->
+  <!-- Left Ascending Skill Wing (Growth / Level Up Tiers) -->
+  <g id="leftWings" filter="url(#saSharpShadow)">
+    <path d="M 124 280 L 70 236 L 90 200 L 140 230 Z" fill="url(#saArmorBase)" stroke="url(#saGold)" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M 112 222 L 56 166 L 80 136 L 136 178 Z" fill="url(#saArmorBase)" stroke="url(#saGold)" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M 108 156 L 68 84 L 102 74 L 148 130 Z" fill="url(#saArmorHighlight)" stroke="url(#saGold)" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Right Ascending Skill Wing (Growth / Level Up Tiers) -->
+  <g id="rightWings" filter="url(#saSharpShadow)">
+    <path d="M 388 280 L 442 236 L 422 200 L 372 230 Z" fill="url(#saArmorBase)" stroke="url(#saGold)" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M 400 222 L 456 166 L 432 136 L 376 178 Z" fill="url(#saArmorBase)" stroke="url(#saGold)" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M 404 156 L 444 84 L 410 74 L 364 130 Z" fill="url(#saArmorHighlight)" stroke="url(#saGold)" stroke-width="3" stroke-linejoin="round"/>
+  </g>
+
+  <!-- ==================== MAIN ARENA CREST SHIELD ==================== -->
+  <g id="mainShield" filter="url(#saSharpShadow)">
+    <polygon points="256,58 392,122 368,326 256,408 144,326 120,122" 
+             fill="url(#saShieldGrad)" 
+             stroke="url(#saGold)" 
+             stroke-width="7" 
+             stroke-linejoin="round"/>
+
+    <polygon points="256,76 374,132 352,314 256,386 160,314 138,132" 
+             fill="none" 
+             stroke="#F59E0B" 
+             stroke-opacity="0.35" 
+             stroke-width="2.5" 
+             stroke-linejoin="round"/>
+  </g>
+
+  <!-- ==================== IN-GAME ESPORTS WARRIOR CHARACTER ==================== -->
+  <g id="inGameCharacter" filter="url(#saSharpShadow)">
+    <path d="M 166 338 L 210 326 L 256 348 L 302 326 L 346 338 L 360 376 L 256 406 L 152 376 Z" 
+          fill="url(#saArmorBase)" 
+          stroke="#334155" 
+          stroke-width="3" 
+          stroke-linejoin="round"/>
+    
+    <path d="M 184 330 L 220 320 L 256 335 L 292 320 L 328 330 L 316 352 L 256 368 L 196 352 Z" 
+          fill="#1E293B" 
+          stroke="url(#saGold)" 
+          stroke-width="2" 
+          stroke-linejoin="round"/>
+    
+    <polygon points="256,346 266,357 256,368 246,357" fill="url(#saGold)" stroke="#FFFBEB" stroke-width="1"/>
+
+    <!-- Tactical Gaming Headset -->
+    <g id="headset">
+      <path d="M 188 160 C 188 120 324 120 324 160" fill="none" stroke="#475569" stroke-width="6" stroke-linecap="round"/>
+      <path d="M 200 152 C 215 130 297 130 312 152" fill="none" stroke="url(#saGold)" stroke-width="2.5" stroke-linecap="round"/>
+
+      <polygon points="174,188 194,182 194,236 174,242" fill="#0F172A" stroke="url(#saGold)" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="184" cy="212" r="6" fill="#F59E0B" filter="url(#saGlowFilter)"/>
+      <circle cx="184" cy="212" r="3" fill="#FFFBEB"/>
+
+      <polygon points="338,188 318,182 318,236 338,242" fill="#0F172A" stroke="url(#saGold)" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="328" cy="212" r="6" fill="#F59E0B" filter="url(#saGlowFilter)"/>
+      <circle cx="328" cy="212" r="3" fill="#FFFBEB"/>
+
+      <path d="M 184 224 L 204 252 L 222 254" fill="none" stroke="url(#saGold)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <rect x="220" y="249" width="10" height="8" rx="2" fill="#F59E0B" stroke="#FFFBEB" stroke-width="1"/>
+    </g>
+
+    <!-- Tactical Combat Helmet Outer Shell -->
+    <path d="M 202 184 L 256 124 L 310 184 L 318 240 L 298 274 L 256 290 L 214 274 L 194 240 Z" 
+          fill="url(#saArmorBase)" 
+          stroke="#475569" 
+          stroke-width="3.5" 
+          stroke-linejoin="round"/>
+
+    <!-- Helmet Crest Ridge & Forehead Armor Plating -->
+    <polygon points="256,125 272,168 256,176 240,168" fill="url(#saGold)" stroke="#FFFBEB" stroke-width="1.5" stroke-linejoin="round"/>
+    <polygon points="256,134 296,180 274,188 256,180 238,188 216,180" fill="url(#saArmorHighlight)" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- Glowing Amber Visor -->
+    <g id="visor" filter="url(#saGlowFilter)">
+      <polygon points="214,196 256,206 298,196 304,220 256,236 208,220" 
+               fill="url(#saVisor)" 
+               stroke="#FEF08A" 
+               stroke-width="2.5" 
+               stroke-linejoin="round"/>
+      <polyline points="218,206 256,215 294,206" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round"/>
+      <polygon points="256,210 286,200 292,214 256,228 220,214 226,200" fill="none" stroke="#F59E0B" stroke-opacity="0.4" stroke-width="1.5"/>
+    </g>
+
+    <!-- Lower Tactical Respirator / Faceplate -->
+    <g id="faceplate">
+      <polygon points="228,238 256,244 284,238 290,268 256,288 222,268" 
+               fill="#0F172A" 
+               stroke="url(#saGold)" 
+               stroke-width="2.5" 
+               stroke-linejoin="round"/>
+      <polygon points="246,252 256,250 266,252 262,274 256,278 250,274" fill="#1E293B" stroke="#475569" stroke-width="1.5"/>
+      <line x1="236" y1="250" x2="242" y2="264" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+      <line x1="276" y1="250" x2="270" y2="264" stroke="#F59E0B" stroke-width="2" stroke-linecap="round"/>
+      <line x1="250" y1="258" x2="262" y2="258" stroke="#FFFBEB" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="252" y1="266" x2="260" y2="266" stroke="#F59E0B" stroke-width="1.5" stroke-linecap="round"/>
+    </g>
+
+    <!-- Cheek & Jawline Armor Panels -->
+    <polygon points="208,226 226,238 222,268 200,246" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+    <polygon points="304,226 286,238 290,268 312,246" fill="#1E293B" stroke="#334155" stroke-width="1.5"/>
+  </g>
+
+  <!-- ==================== THREE STARS OF MASTERY ==================== -->
+  <g id="masteryStars" filter="url(#saSharpShadow)">
+    <polygon points="256,40 261,54 276,54 264,63 268,77 256,68 244,77 248,63 236,54 251,54" 
+             fill="url(#saGold)" stroke="#FFFBEB" stroke-width="1.2" stroke-linejoin="round"/>
+    <polygon points="222,54 226,64 237,64 228,71 231,82 222,75 213,82 216,71 207,64 218,64" 
+             fill="url(#saGold)" stroke="#FFFBEB" stroke-width="1" stroke-linejoin="round"/>
+    <polygon points="290,54 294,64 305,64 296,71 299,82 290,75 281,82 284,71 275,64 286,64" 
+             fill="url(#saGold)" stroke="#FFFBEB" stroke-width="1" stroke-linejoin="round"/>
+  </g>
+
+  <!-- ==================== TOURNAMENT PODIUM BANNER ==================== -->
+  <g id="brandBanner" filter="url(#saSharpShadow)">
+    <polygon points="106,448 136,418 136,458 90,466" fill="#78350F" stroke="#B45309" stroke-width="2" stroke-linejoin="round"/>
+    <polygon points="406,448 376,418 376,458 422,466" fill="#78350F" stroke="#B45309" stroke-width="2" stroke-linejoin="round"/>
+
+    <polygon points="126,420 386,420 370,472 142,472" 
+             fill="#0F172A" 
+             stroke="url(#saGold)" 
+             stroke-width="3.5" 
+             stroke-linejoin="round"/>
+    
+    <polyline points="138,426 374,426 362,466 150,466 138,426" 
+              fill="none" 
+              stroke="#F59E0B" 
+              stroke-opacity="0.4" 
+              stroke-width="1.5"/>
+
+    <text x="256" y="456" 
+          font-family="'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" 
+          font-weight="900" 
+          font-size="24" 
+          letter-spacing="5" 
+          text-anchor="middle" 
+          fill="#FFFFFF" 
+          stroke="#000000" 
+          stroke-width="1" 
+          paint-order="stroke">
+      SKILL <tspan fill="url(#saGold)">ARENA</tspan>
+    </text>
+  </g>
+</svg>

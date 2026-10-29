@@ -1,0 +1,253 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['id', 'username', 'email', 'password', 'wallet_balance', 'upi_id', 'is_blocked', 'created_at']) &&
+             data.keys().hasOnly([
+               'id', 'username', 'email', 'password', 'wallet_balance', 'upi_id', 'is_blocked',
+               'dpdp_consent_accepted', 'dpdp_consent_at', 'age_verified_18',
+               'nominee_name', 'nominee_contact',
+               'recovery_key', 'security_question', 'security_answer', 'last_password_reset_at',
+               'created_at'
+             ]) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.username is string && data.username.size() >= 1 && data.username.size() <= 50 &&
+             data.email is string && data.email.size() >= 3 && data.email.size() <= 100 &&
+             data.password is string && data.password.size() >= 1 && data.password.size() <= 100 &&
+             data.wallet_balance is number && data.wallet_balance >= 0 &&
+             data.upi_id is string && data.upi_id.size() <= 100 &&
+             data.is_blocked is bool &&
+             (!('dpdp_consent_accepted' in data) || data.dpdp_consent_accepted is bool) &&
+             (!('dpdp_consent_at' in data) || (data.dpdp_consent_at is string && data.dpdp_consent_at.size() <= 40)) &&
+             (!('age_verified_18' in data) || data.age_verified_18 is bool) &&
+             (!('nominee_name' in data) || (data.nominee_name is string && data.nominee_name.size() <= 80)) &&
+             (!('nominee_contact' in data) || (data.nominee_contact is string && data.nominee_contact.size() <= 120)) &&
+             (!('recovery_key' in data) || (data.recovery_key is string && data.recovery_key.size() <= 32)) &&
+             (!('security_question' in data) || (data.security_question is string && data.security_question.size() <= 140)) &&
+             (!('security_answer' in data) || (data.security_answer is string && data.security_answer.size() <= 100)) &&
+             (!('last_password_reset_at' in data) || (data.last_password_reset_at is string && data.last_password_reset_at.size() <= 40)) &&
+             data.created_at is string && data.created_at.size() <= 40;
+    }
+
+    function isValidAdmin(data) {
+      return data.keys().hasAll(['id', 'username', 'password']) &&
+             data.keys().hasOnly(['id', 'username', 'password']) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.username is string && data.username.size() >= 1 && data.username.size() <= 50 &&
+             data.password is string && data.password.size() >= 1 && data.password.size() <= 100;
+    }
+
+    function isValidTournament(data) {
+      return data.keys().hasAll([
+               'id', 'title', 'game_name', 'entry_fee', 'prize_pool', 'match_time',
+               'commission_percentage', 'room_id', 'room_password', 'status',
+               'winner_id', 'winner_username', 'created_at'
+             ]) &&
+             data.keys().hasOnly([
+               'id', 'title', 'game_name', 'entry_fee', 'prize_pool',
+               'prize_1st', 'prize_2nd', 'prize_3rd', 'match_time',
+               'commission_percentage', 'room_id', 'room_password', 'status',
+               'winner_id', 'winner_username',
+               'winner_2nd_id', 'winner_2nd_username',
+               'winner_3rd_id', 'winner_3rd_username', 'rules',
+               'team_mode', 'max_slots', 'created_at'
+             ]) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.game_name is string && data.game_name.size() >= 1 && data.game_name.size() <= 80 &&
+             data.entry_fee is number && data.entry_fee >= 0 &&
+             data.prize_pool is number && data.prize_pool >= 0 &&
+             (!('prize_1st' in data) || (data.prize_1st is number && data.prize_1st >= 0)) &&
+             (!('prize_2nd' in data) || (data.prize_2nd is number && data.prize_2nd >= 0)) &&
+             (!('prize_3rd' in data) || (data.prize_3rd is number && data.prize_3rd >= 0)) &&
+             data.match_time is string && data.match_time.size() >= 1 && data.match_time.size() <= 60 &&
+             data.commission_percentage is number && data.commission_percentage >= 0 && data.commission_percentage <= 100 &&
+             data.room_id is string && data.room_id.size() <= 80 &&
+             data.room_password is string && data.room_password.size() <= 80 &&
+             data.status in ['Upcoming', 'Live', 'Completed', 'Cancelled'] &&
+             data.winner_id is string && data.winner_id.size() <= 128 &&
+             data.winner_username is string && data.winner_username.size() <= 50 &&
+             (!('winner_2nd_id' in data) || (data.winner_2nd_id is string && data.winner_2nd_id.size() <= 128)) &&
+             (!('winner_2nd_username' in data) || (data.winner_2nd_username is string && data.winner_2nd_username.size() <= 50)) &&
+             (!('winner_3rd_id' in data) || (data.winner_3rd_id is string && data.winner_3rd_id.size() <= 128)) &&
+             (!('winner_3rd_username' in data) || (data.winner_3rd_username is string && data.winner_3rd_username.size() <= 50)) &&
+             (!('rules' in data) || (data.rules is string && data.rules.size() <= 2000)) &&
+             (!('team_mode' in data) || (data.team_mode in ['Solo', 'Duo', 'Squad'])) &&
+             (!('max_slots' in data) || (data.max_slots is number && data.max_slots >= 2 && data.max_slots <= 500)) &&
+             data.created_at is string && data.created_at.size() <= 40;
+    }
+
+    function isValidParticipant(data) {
+      return data.keys().hasAll(['id', 'user_id', 'username', 'tournament_id', 'created_at']) &&
+             data.keys().hasOnly([
+               'id', 'user_id', 'username', 'tournament_id',
+               'team_mode', 'slot_number', 'team_name',
+               'player_1_ign', 'player_2_ign', 'player_3_ign', 'player_4_ign',
+               'created_at'
+             ]) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.user_id is string && data.user_id.size() >= 1 && data.user_id.size() <= 128 &&
+             data.username is string && data.username.size() >= 1 && data.username.size() <= 50 &&
+             data.tournament_id is string && data.tournament_id.size() >= 1 && data.tournament_id.size() <= 128 &&
+             (!('team_mode' in data) || (data.team_mode in ['Solo', 'Duo', 'Squad'])) &&
+             (!('slot_number' in data) || (data.slot_number is number && data.slot_number >= 1 && data.slot_number <= 500)) &&
+             (!('team_name' in data) || (data.team_name is string && data.team_name.size() <= 60)) &&
+             (!('player_1_ign' in data) || (data.player_1_ign is string && data.player_1_ign.size() <= 50)) &&
+             (!('player_2_ign' in data) || (data.player_2_ign is string && data.player_2_ign.size() <= 50)) &&
+             (!('player_3_ign' in data) || (data.player_3_ign is string && data.player_3_ign.size() <= 50)) &&
+             (!('player_4_ign' in data) || (data.player_4_ign is string && data.player_4_ign.size() <= 50)) &&
+             data.created_at is string && data.created_at.size() <= 40;
+    }
+
+    function isValidTransaction(data) {
+      return data.keys().hasAll(['id', 'user_id', 'username', 'amount', 'type', 'description', 'created_at']) &&
+             data.keys().hasOnly(['id', 'user_id', 'username', 'amount', 'type', 'description', 'created_at']) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.user_id is string && data.user_id.size() >= 1 && data.user_id.size() <= 128 &&
+             data.username is string && data.username.size() >= 1 && data.username.size() <= 50 &&
+             data.amount is number && data.amount >= 0 &&
+             data.type in ['credit', 'debit'] &&
+             data.description is string && data.description.size() >= 1 && data.description.size() <= 200 &&
+             data.created_at is string && data.created_at.size() <= 40;
+    }
+
+    function isValidDeposit(data) {
+      return data.keys().hasAll(['id', 'user_id', 'username', 'amount', 'transaction_id', 'status', 'created_at']) &&
+             data.keys().hasOnly(['id', 'user_id', 'username', 'amount', 'transaction_id', 'screenshot_url', 'status', 'admin_comment', 'created_at']) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.user_id is string && data.user_id.size() >= 1 && data.user_id.size() <= 128 &&
+             data.username is string && data.username.size() >= 1 && data.username.size() <= 50 &&
+             data.amount is number && data.amount > 0 &&
+             data.transaction_id is string && data.transaction_id.size() <= 80 &&
+             (!('screenshot_url' in data) || (data.screenshot_url is string && data.screenshot_url.size() <= 500000)) &&
+             data.status in ['Pending', 'Completed', 'Rejected'] &&
+             (!('admin_comment' in data) || (data.admin_comment is string && data.admin_comment.size() <= 200)) &&
+             data.created_at is string && data.created_at.size() <= 40;
+    }
+
+    function isValidWithdrawal(data) {
+      return data.keys().hasAll(['id', 'user_id', 'username', 'amount', 'upi_id', 'status', 'created_at']) &&
+             data.keys().hasOnly(['id', 'user_id', 'username', 'amount', 'upi_id', 'status', 'admin_comment', 'created_at']) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.user_id is string && data.user_id.size() >= 1 && data.user_id.size() <= 128 &&
+             data.username is string && data.username.size() >= 1 && data.username.size() <= 50 &&
+             data.amount is number && data.amount > 0 &&
+             data.upi_id is string && data.upi_id.size() >= 1 && data.upi_id.size() <= 100 &&
+             data.status in ['Pending', 'Completed', 'Rejected'] &&
+             (!('admin_comment' in data) || (data.admin_comment is string && data.admin_comment.size() <= 200)) &&
+             data.created_at is string && data.created_at.size() <= 40;
+    }
+
+    function isValidNotification(data) {
+      return data.keys().hasAll(['id', 'user_id', 'tournament_id', 'type', 'title', 'message', 'is_read', 'created_at']) &&
+             data.keys().hasOnly(['id', 'user_id', 'tournament_id', 'type', 'title', 'message', 'is_read', 'created_at']) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.user_id is string && data.user_id.size() >= 1 && data.user_id.size() <= 128 &&
+             data.tournament_id is string && data.tournament_id.size() <= 128 &&
+             data.type in ['starting_soon', 'results_finalized', 'postponed', 'cancelled', 'payment_update'] &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.message is string && data.message.size() >= 1 && data.message.size() <= 500 &&
+             data.is_read is bool &&
+             data.created_at is string && data.created_at.size() <= 40;
+    }
+
+    function isValidSetting(data) {
+      return data.keys().hasAll(['id', 'admin_upi_id', 'qr_code_url', 'schema_updated', 'installed']) &&
+             data.keys().hasOnly(['id', 'admin_upi_id', 'qr_code_url', 'schema_updated', 'installed']) &&
+             data.id is string && data.id.size() >= 1 && data.id.size() <= 128 &&
+             data.admin_upi_id is string && data.admin_upi_id.size() <= 100 &&
+             data.qr_code_url is string && data.qr_code_url.size() <= 150000 &&
+             data.schema_updated is bool &&
+             data.installed is bool;
+    }
+
+    match /test/{docId} {
+      allow get: if true;
+    }
+
+    match /users/{userId} {
+      allow get: if isValidId(userId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(userId) && isValidUser(incoming());
+      allow update: if isValidId(userId) && isValidUser(incoming()) && incoming().id == existing().id;
+      allow delete: if isValidId(userId);
+    }
+
+    match /admins/{adminId} {
+      allow get: if isValidId(adminId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(adminId) && isValidAdmin(incoming());
+      allow update: if isValidId(adminId) && isValidAdmin(incoming()) && incoming().id == existing().id;
+    }
+
+    match /tournaments/{tournamentId} {
+      allow get: if isValidId(tournamentId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(tournamentId) && isValidTournament(incoming());
+      allow update: if isValidId(tournamentId) && isValidTournament(incoming()) && incoming().id == existing().id;
+      allow delete: if isValidId(tournamentId);
+    }
+
+    match /participants/{participantId} {
+      allow get: if isValidId(participantId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(participantId) && isValidParticipant(incoming());
+      allow delete: if isValidId(participantId);
+    }
+
+    match /transactions/{transactionId} {
+      allow get: if isValidId(transactionId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(transactionId) && isValidTransaction(incoming());
+      allow delete: if isValidId(transactionId);
+    }
+
+    match /deposits/{depositId} {
+      allow get: if isValidId(depositId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(depositId) && isValidDeposit(incoming());
+      allow update: if isValidId(depositId) && isValidDeposit(incoming()) && incoming().id == existing().id;
+      allow delete: if isValidId(depositId);
+    }
+
+    match /withdrawals/{withdrawalId} {
+      allow get: if isValidId(withdrawalId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(withdrawalId) && isValidWithdrawal(incoming());
+      allow update: if isValidId(withdrawalId) && isValidWithdrawal(incoming()) && incoming().id == existing().id;
+      allow delete: if isValidId(withdrawalId);
+    }
+
+    match /notifications/{notificationId} {
+      allow get: if isValidId(notificationId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(notificationId) && isValidNotification(incoming());
+      allow update: if isValidId(notificationId) && isValidNotification(incoming()) && incoming().id == existing().id;
+      allow delete: if isValidId(notificationId);
+    }
+
+    match /settings/{settingId} {
+      allow get: if isValidId(settingId);
+      allow list: if request.query.limit == null || request.query.limit <= 1000;
+      allow create: if isValidId(settingId) && isValidSetting(incoming());
+      allow update: if isValidId(settingId) && isValidSetting(incoming()) && incoming().id == existing().id;
+    }
+  }
+}
